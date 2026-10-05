@@ -1,0 +1,36 @@
+# Render Blueprint — one FREE web service (frontend + backend in one image).
+# Deploy: push to GitHub, then Render → New → Blueprint, pick this repo.
+services:
+  - type: web
+    name: photo-sync-router
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free # 100% free — no paid instance, no disk add-on
+    healthCheckPath: /api/health
+    envVars:
+      - key: GOOGLE_CLIENT_ID
+        sync: false # set in the Render dashboard
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FERNET_KEY
+        sync: false # generate: python -c "from cryptography.fernet import Fernet;print(Fernet.generate_key().decode())"
+      - key: OAUTH_REDIRECT_URI
+        # After first deploy, set to:
+        # https://<your-service>.onrender.com/api/auth/google/callback
+        sync: false
+      - key: FRONTEND_URL
+        # Same origin as the service, e.g. https://<your-service>.onrender.com
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SQLITE_PATH
+        value: /app/data/sync_state.db
+      - key: AI_NOTES_ENABLED
+        value: "false"
+      # --- OPTIONAL: durable state while staying free ---
+      # Render's FREE web service has no persistent disk, so the SQLite file
+      # resets on restart/redeploy. To keep sync state permanently for free,
+      # create a free Postgres at neon.tech (no credit card) and add:
+      #   - key: DATABASE_URL
+      #     sync: false   # postgresql+psycopg2://user:pass@host/db?sslmode=require
+      # The app uses it automatically; no code changes needed.

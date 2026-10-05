@@ -1,0 +1,30 @@
+# secrets / local state
+.env
+*.env
+!.env.example
+backend/data/
+backend/app/data/
+*.db
+*.db-wal
+*.db-shm
+.fernet_key
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# node
+node_modules/
+frontend/dist/
+npm-debug.log*
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
+
+# ts build info
+*.tsbuildinfo
